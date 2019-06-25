@@ -1,4 +1,5 @@
-from visual import *
+from vpython import vector
+from vpython.vpython import *
 import time
 import copy
 
@@ -61,6 +62,7 @@ Potential add-on features:
 class Chess(object):
     
     def __init__(self,rows=8,cols=8,gravity=[None,None]):
+        scene = canvas()
         self.gravity=gravity
         #feature to be added: "gravity" allows a space on the board
         # to be specified to pull pieces toward that space a certain amount
@@ -72,7 +74,7 @@ class Chess(object):
         self.players=[None,1,2]
         self.playerTurn=1
         self.otherPlayer=2
-        self.board=[[None]*cols for row in xrange(rows)]
+        self.board=[[None]*cols for row in range(rows)]
         self.isGameOver=False
         self.playerFirstMove=[None,True,True]
         self.boardHeight=0.1
@@ -83,7 +85,7 @@ class Chess(object):
         self.keyHeld=False
         # player 1 and player 2 at index 0 and 1 respectively
         # for playerColors and playerFirstMove
-        scene.center=(3.5,6,3)
+        scene.center=vector(3.5,6,3)
         scene.title="Chess"
         scene.width=800
         scene.height=800
@@ -98,49 +100,49 @@ class Chess(object):
 
     def printInstructions(self,version=0):
         if (version==0):
-            print "Welcome to Chess in 3-D.  To begin the game"
-            print "player 1 may select a piece with the mouse"
-            print "and make the first move."
-            print "The window is resizeable, and you may pan the"
-            print "'camera' by holding the right mouse button and"
-            print "moving the mouse.  You may zoom in and out by"
-            print "holding both the right and left mouse buttons"
-            print "and scrolling the mouse up and down."
-            print ""
-            print "For more information, press H to see these instructions"
-            print "again, press P to see information on the pieces and"
-            print "piece moves, press N to see the piece count for each player,"
-            print "press R to restart the game, and press Q to quit."
+            print("Welcome to Chess in 3-D.  To begin the game")
+            print("player 1 may select a piece with the mouse")
+            print("and make the first move.")
+            print("The window is resizeable, and you may pan the")
+            print("'camera' by holding the right mouse button and")
+            print("moving the mouse.  You may zoom in and out by")
+            print("holding both the right and left mouse buttons")
+            print("and scrolling the mouse up and down.")
+            print("")
+            print("For more information, press H to see these instructions")
+            print("again, press P to see information on the pieces and")
+            print("piece moves, press N to see the piece count for each player,")
+            print("press R to restart the game, and press Q to quit.")
         elif (version==1):
-            print "The pieces are represented in the standard setup, but with"
-            print "different shapes used in vpython.\n"
-            print "Setup: inner rows are all pawns, outer rows: rook,knight,"
-            print "bishop,queen,king,bishop,knight,rook"
-            print "Pawns: Spheres (can move 2 spaces forward for the first move"
-            print "of that pawn, one space forward for any subsequent moves,"
-            print "and diagonally one space to capture an enemy piece."
-            print "If they reach the other side of the board, they are awarded"
-            print "queen status and can move in the same way as a queen.\n"
-            print "Rooks: Wide cylinders starting at the corners; can move"
-            print "any horizontal or vertical distance as long as it is not"
-            print "blocked.\n"
-            print "Knights: can move a total of 2 rows and 1 column or vice-"
-            print "versa in an L-shape and can jump over pieces.\n"
-            print "Bishops: can move any diagonal distance as long as they are"
-            print "not blocked.\n"
-            print "Queens: can move any row,column, and diagonal distance as"
-            print "long as they are not blocked.\n"
-            print "Kings: can move any one space around them (row, column,"
-            print "or diagonal as long as they are not blocked."
+            print("The pieces are represented in the standard setup, but with")
+            print("different shapes used in vpython.\n")
+            print("Setup: inner rows are all pawns, outer rows: rook,knight,")
+            print("bishop,queen,king,bishop,knight,rook")
+            print("Pawns: Spheres (can move 2 spaces forward for the first move")
+            print("of that pawn, one space forward for any subsequent moves,")
+            print("and diagonally one space to capture an enemy piece.")
+            print("If they reach the other side of the board, they are awarded")
+            print("queen status and can move in the same way as a queen.\n")
+            print("Rooks: Wide cylinders starting at the corners; can move")
+            print("any horizontal or vertical distance as long as it is not")
+            print("blocked.\n")
+            print("Knights: can move a total of 2 rows and 1 column or vice-")
+            print("versa in an L-shape and can jump over pieces.\n")
+            print("Bishops: can move any diagonal distance as long as they are")
+            print("not blocked.\n")
+            print("Queens: can move any row,column, and diagonal distance as")
+            print("long as they are not blocked.\n")
+            print("Kings: can move any one space around them (row, column,")
+            print("or diagonal as long as they are not blocked.")
         elif (version==2):
-            print self.pieceCounts()
+            print(self.pieceCounts())
 
     def pieceCounts(self):
         board=self.boardWithPieces
         count1=0
         count2=0
-        for row in xrange(self.boardRows):
-            for col in xrange(self.boardCols):
+        for row in range(self.boardRows):
+            for col in range(self.boardCols):
                 if (board[row][col]>0):
                     count2+=1
                 elif (board[row][col]<0 and board[row][col]!=None):
@@ -166,7 +168,7 @@ class Chess(object):
         
     
     def drawBoard(self):
-        # for box(pos=(p,q,r),options) increasing values of r come out toward
+        # for box(pos=vector(p,q,r),options) increasing values of r come out toward
         # the user's view, q is in the vertical direction (up and down in
         # user's initial perspective), and p is in horizontal (left and
         # right in user's initial perspective
@@ -175,38 +177,38 @@ class Chess(object):
         (rows,cols)=(self.boardRows,self.boardCols)
         self.drawLights()
         player=self.playerTurn
-        for col in xrange(cols):
-            for row in xrange(rows):
+        for col in range(cols):
+            for row in range(rows):
                 self.drawPiece(row,col)
                 if ((row+col)%2==0):
-                    box(pos=(size*col,0,size*row),length=size,
+                    box(pos=vector(size*col,0,size*row),length=size,
                           height=self.boardHeight,width=size,
                           color=color.white)
                 else:
-                    box(pos=(size*col,0,size*row),length=size,
+                    box(pos=vector(size*col,0,size*row),length=size,
                           height=self.boardHeight,width=size,
                           color=color.blue)
         if (player==1):
             self.turnText1=text(text=("Player turn"), align="center",
-                          depth=-0.2,color=color.cyan,axis=(1,0,0),
-                          pos=(-1.5,6,0))
+                          depth=-0.2,color=color.cyan,axis=vector(1,0,0),
+                          pos=vector(-1.5,6,0))
             self.turnText2=text(text=("Player turn"),align="center",
-                          depth=-0.2,color=color.cyan,axis=(-1,0,0),
-                          pos=(self.boardRows*self.cellSize+1.5,6,
+                          depth=-0.2,color=color.cyan,axis=vector(-1,0,0),
+                          pos=vector(self.boardRows*self.cellSize+1.5,6,
                                self.boardRows*self.cellSize))
         else:
             self.turnText1=text(text=("Player turn"), align="center",
-                      depth=-0.2,color=color.cyan,axis=(1,0,0),
-                      pos=(-1.5,6,0))
+                      depth=-0.2,color=color.cyan,axis=vector(1,0,0),
+                      pos=vector(-1.5,6,0))
             self.turnText2=text(text=("Player turn"),align="center",
-                      depth=-0.2,color=color.cyan,axis=(-1,0,0),
-                      pos=(self.boardRows*self.cellSize+1.5,6,
+                      depth=-0.2,color=color.cyan,axis=vector(-1,0,0),
+                      pos=vector(self.boardRows*self.cellSize+1.5,6,
                            self.boardRows*self.cellSize))
 
     def drawLights(self):
         # referenced vpython.org for assistance in creating the lights
         # for aesthetic purposes in the game to create glowing effect
-        light1=local_light(pos=(self.boardCols*self.cellSize/2-0.5,
+        light1=local_light(pos=vector(self.boardCols*self.cellSize/2-0.5,
                             self.boardHeight,
                         self.boardRows*self.cellSize/2-0.5),color=color.yellow)
                 
@@ -226,53 +228,53 @@ class Chess(object):
     def drawForDrawPieces(self,piece,size,row,col,objPieces):
         if (piece<0 and piece!=None):
             if (piece==-1):
-                objPieces[row][col]=sphere(pos=(size*col,self.boardHeight+0.5,
+                objPieces[row][col]=sphere(pos=vector(size*col,self.boardHeight+0.5,
                                     size*row),radius=0.5,color=color.cyan)
             elif (piece==-2):
-                objPieces[row][col]=cylinder(pos=(size*col,self.boardHeight,
-                                            size*row),axis=(0,0.8,0),
+                objPieces[row][col]=cylinder(pos=vector(size*col,self.boardHeight,
+                                            size*row),axis=vector(0,0.8,0),
                                              radius=0.5,color=color.cyan)
             elif (piece==-3):
-                objPieces[row][col]=ellipsoid(pos=(size*col,
+                objPieces[row][col]=ellipsoid(pos=vector(size*col,
                                             self.boardHeight+0.5,size*row),
-                                        size=(1,1.2,0.3),color=color.cyan)
+                                        size=vector(1,1.2,0.3),color=color.cyan)
             elif (piece==-4):
-                objPieces[row][col]=cylinder(pos=(size*col,self.boardHeight,
-                                            size*row),axis=(0,1.2,0),
+                objPieces[row][col]=cylinder(pos=vector(size*col,self.boardHeight,
+                                            size*row),axis=vector(0,1.2,0),
                                              radius=0.3,color=color.cyan)
             elif (piece==-5):
-                objPieces[row][col]=ring(pos=(size*col,self.boardHeight+0.5,
-                                        size*row),axis=(0,0,1),radius=0.3,
+                objPieces[row][col]=ring(pos=vector(size*col,self.boardHeight+0.5,
+                                        size*row),axis=vector(0,0,1),radius=0.3,
                                          thickness=0.2,color=color.cyan)
             elif (piece==-6):
-                objPieces[row][col]=ellipsoid(pos=(size*col,
+                objPieces[row][col]=ellipsoid(pos=vector(size*col,
                                             self.boardHeight+0.5,size*row),
-                                              size=(0.6,1.2,0.6),
+                                              size=vector(0.6,1.2,0.6),
                                               color=color.cyan)
         elif (piece>0 and piece!=None):
             if (piece==1):
-                objPieces[row][col]=sphere(pos=(size*col,self.boardHeight+0.5,
+                objPieces[row][col]=sphere(pos=vector(size*col,self.boardHeight+0.5,
                                     size*row),radius=0.5,color=color.red)
             elif (piece==2):
-                objPieces[row][col]=cylinder(pos=(size*col,self.boardHeight,
-                                            size*row),axis=(0,0.8,0),
+                objPieces[row][col]=cylinder(pos=vector(size*col,self.boardHeight,
+                                            size*row),axis=vector(0,0.8,0),
                                              radius=0.5,color=color.red)
             elif (piece==3):
-                objPieces[row][col]=ellipsoid(pos=(size*col,
+                objPieces[row][col]=ellipsoid(pos=vector(size*col,
                                             self.boardHeight+0.5,size*row),
-                                        size=(1,1.2,0.3),color=color.red)
+                                        size=vector(1,1.2,0.3),color=color.red)
             elif (piece==4):
-                objPieces[row][col]=cylinder(pos=(size*col,self.boardHeight,
-                                            size*row),axis=(0,1.2,0),
+                objPieces[row][col]=cylinder(pos=vector(size*col,self.boardHeight,
+                                            size*row),axis=vector(0,1.2,0),
                                              radius=0.3,color=color.red)
             elif (piece==5):
-                objPieces[row][col]=ring(pos=(size*col,self.boardHeight+0.5,
-                                        size*row),axis=(0,0,1),radius=0.3,
+                objPieces[row][col]=ring(pos=vector(size*col,self.boardHeight+0.5,
+                                        size*row),axis=vector(0,0,1),radius=0.3,
                                          thickness=0.2,color=color.red)
             elif (piece==6):
-                objPieces[row][col]=ellipsoid(pos=(size*col,
+                objPieces[row][col]=ellipsoid(pos=vector(size*col,
                                             self.boardHeight+0.5,size*row),
-                                        size=(0.6,1.2,0.6),color=color.red)
+                                        size=vector(0.6,1.2,0.6),color=color.red)
                 
             
 
@@ -280,22 +282,22 @@ class Chess(object):
         player=self.playerTurn
         if (player==1):
             self.turnText1=text(text=("Player turn"), align="center",
-                          depth=-0.2,color=color.cyan,axis=(1,0,0),
-                          pos=(-1.5,6,0))
+                          depth=-0.2,color=color.cyan,axis=vector(1,0,0),
+                          pos=vector(-1.5,6,0))
             self.turnText2=text(text=("Player turn"),align="center",
-                          depth=-0.2,color=color.cyan,axis=(-1,0,0),
-                          pos=(self.boardRows*self.cellSize+1.5,6,
+                          depth=-0.2,color=color.cyan,axis=vector(-1,0,0),
+                          pos=vector(self.boardRows*self.cellSize+1.5,6,
                                self.boardRows*self.cellSize))
         if (player==2):
             self.turnText1=text(text=("Player turn"), align="center",
-                          depth=-0.2,color=color.red,axis=(1,0,0),
-                          pos=(-1.5,6,0))
+                          depth=-0.2,color=color.red,axis=vector(1,0,0),
+                          pos=vector(-1.5,6,0))
             self.turnText2=text(text=("Player turn"),align="center",
-                          depth=-0.2,color=color.red,axis=(-1,0,0),
-                          pos=(self.boardRows*self.cellSize+1.5,6,
+                          depth=-0.2,color=color.red,axis=vector(-1,0,0),
+                          pos=vector(self.boardRows*self.cellSize+1.5,6,
                                self.boardRows*self.cellSize))
-        for row in xrange(self.boardRows):
-            for col in xrange(self.boardCols):
+        for row in range(self.boardRows):
+            for col in range(self.boardCols):
                 if (board[row][col]==None and objBoard[row][col]!=0):
                     objBoard[row][col].visible=False
                 elif (board[row][col]!=None and (objBoard[row][col]==0 or
@@ -315,13 +317,13 @@ class Chess(object):
         kingPos=self.kingPos[playerInCheck]
         self.selection1=(kingPos[1],None,kingPos[0])
         sign=-1 if (playerInCheck==1) else 1
-        for row in xrange(self.boardRows):
-            for col in xrange(self.boardCols):
+        for row in range(self.boardRows):
+            for col in range(self.boardCols):
                 if (board[row][col]!=None and board[row][col]*sign>0):
-                    for piece in xrange(6):
+                    for piece in range(6):
                         for move in moves[piece]:
-                            for drow in xrange(self.boardRows-row):
-                                for dcol in xrange(self.boardCols-col):
+                            for drow in range(self.boardRows-row):
+                                for dcol in range(self.boardCols-col):
                                     if (self.canMoveInDirection(
                                         (col,row),drow,dcol)):
                                         self.selection1=None
@@ -334,19 +336,19 @@ class Chess(object):
 
     
     def checkForChecks(self,board):
-        for row in xrange(self.boardRows):
-            for col in xrange(self.boardCols):
+        for row in range(self.boardRows):
+            for col in range(self.boardCols):
                 piece=board[row][col]
                 check=self.canReachKing(board,piece,row,col)
                 if ((piece!= None) and check):
                     playerInCheck=self.players[1] if piece>0 else\
                                                     self.players[2]
                     self.inCheck[playerInCheck] = True
-                    print "Player",playerInCheck," in check"
+                    print("Player",playerInCheck," in check")
                     if (not self.escapeCheckMate(board)):
                         return True
                     else:
-                        print "CHECKMATE!"
+                        print("CHECKMATE!")
                         self.gameOver()
                     return True
         self.inCheck=[None,False,False]    
@@ -365,29 +367,29 @@ class Chess(object):
             (drow,dcol)=(kingPos[0]-row,kingPos[1]-col)
             otherKing=king*-1
             if (piece==1):
-                print "pawn",row,col
+                print("pawn",row,col)
                 if (abs(drow)==abs(dcol)==1 and drow<0):
                     return True
                 return False
             elif (piece==2):
-                print "rook",row,col
+                print("rook",row,col)
                 return self.canRookMove(kingPos,drow,dcol,otherKing,
                                                             [col,0,row])
             elif (piece==3):
-                print "knight",row,col
+                print("knight",row,col)
                 return self.canKnightMove(kingPos,drow,dcol,otherKing,
                                                             [col,0,row])
             elif (piece==4):
-                print "bishop",row,col
+                print("bishop",row,col)
                 return self.canBishopMove(kingPos,drow,dcol,otherKing,
                                                             [col,0,row])
             elif (piece==5):
-                print "kingPos",kingPos
-                print "queen",row,col
+                print("kingPos",kingPos)
+                print("queen",row,col)
                 return self.canQueenMove(kingPos,drow,dcol,otherKing,
                                                             [col,0,row])
             elif (piece==6):
-                print "king",row,col
+                print("king",row,col)
                 return self.canKingMove(kingPos,drow,dcol,otherKing,
                                                             [col,0,row])
         elif (piece<0):
@@ -396,29 +398,29 @@ class Chess(object):
             (drow,dcol)=(kingPos[0]-row,kingPos[1]-col)
             otherKing=king
             if (piece==-1):
-                print "pawn",row,col
+                print("pawn",row,col)
                 if (abs(drow)==abs(dcol)==1 and drow<0):
                     return True
                 return False
             elif (piece==-2):
-                print "rook",row,col
+                print("rook",row,col)
                 return self.canRookMove(kingPos,drow,dcol,otherKing,
                                                             [col,0,row])
             elif (piece==-3):
-                print "knight",row,col
+                print("knight",row,col)
                 return self.canKnightMove(kingPos,drow,dcol,otherKing,
                                                             [col,0,row])
             elif (piece==-4):
-                print "bishop",row,col
+                print("bishop",row,col)
                 return self.canBishopMove(kingPos,drow,dcol,otherKing,
                                                             [col,0,row])
             elif (piece==-5):
-                print "kingPos",kingPos
-                print "queen",row,col
+                print("kingPos",kingPos)
+                print("queen",row,col)
                 return self.canQueenMove(kingPos,drow,dcol,otherKing,
                                                             [col,0,row])
             elif (piece==-6):
-                print "king",row,col
+                print("king",row,col)
                 return self.canKingMove(kingPos,drow,dcol,otherKing,
                                                             [col,0,row])
         return [False,otherKing,None]
@@ -439,8 +441,8 @@ class Chess(object):
                               [-1,-1,-1,-1,-1,-1,-1,-1],
                               [-2,-3,-4,-5,-6,-4,-3,-2]]
         (rows,cols)=(self.boardRows,self.boardCols)
-        self.gameplayPieces=[[0]*cols for row in xrange(rows)]
-        self.checkGameplayPieces=[[str(0)]*cols for row in xrange(rows)]
+        self.gameplayPieces=[[0]*cols for row in range(rows)]
+        self.checkGameplayPieces=[[str(0)]*cols for row in range(rows)]
         #2*2 rows for each player's pieces
         
 
@@ -489,10 +491,10 @@ class Chess(object):
         piece=scene.mouse.pick
         if (self.isGameOver==False): 
             if ((piece==None) and (self.firstSelected==False)):
-                print "You must select a piece on the board"
+                print("You must select a piece on the board")
                 return False
             elif((piece==None) and (self.firstSelected==True)):
-                print "You must select a space on the board"
+                print("You must select a space on the board")
                 return False
             self.selection(piece,event)
         else:
@@ -513,11 +515,11 @@ class Chess(object):
                 self.selection1=piece
                 piece.color=color.magenta
             elif (piece.color==self.playerColors[self.otherPlayer]):
-                print "You cannot move your opponent's pieces"
+                print("You cannot move your opponent's pieces")
                 self.selection1=None
                 self.firstSelected=False
             else:
-                print "You must select one of your pieces to move"
+                print("You must select one of your pieces to move")
                 self.selection1=None
                 self.firstSelected=False
         else:
@@ -572,7 +574,7 @@ class Chess(object):
         if (self.inCheck[player]):
             (playBoard[row0][col0],playBoard[row1][col1])=\
             (playBoard[row1][col1],playBoard[row0][col0])
-            print "That move is not valid due to you being in check."
+            print("That move is not valid due to you being in check.")
         else:       
             if (willCapture):
                 objPieces[row0][col0].visible=False
@@ -607,13 +609,13 @@ class Chess(object):
                             return True
         else:          
             if (drow==dcol==0):
-                print "You must select space to move your piece to"
+                print("You must select space to move your piece to")
             else:
                 for chessPiece in moves:
                     for move in chessPiece:
                         if (self.canMoveInDirection(spaceToMoveTo,drow,dcol)):
                             return True
-        print "That move is not legal" 
+        print("That move is not legal")
         return False
     
      
@@ -630,26 +632,26 @@ class Chess(object):
         destination=board[int(round(nextSpace[2]))][int(round(nextSpace[0]))]
         if (movingPiece!=None):
             if (abs(movingPiece)%10==1):
-                print "pawn moving"
+                print("pawn moving")
                 if (abs(movingPiece)==1):
                     return self.canPawnMove(nextSpace,drow,dcol,destination,piece0)
                 # queened pawns represented by (multiples of 10) + 1
                 elif (abs(movingPiece)>1):
                     return self.canQueenMove(nextSpace,drow,dcol,destination,piece0)
             elif (abs(movingPiece)==2):
-                print "rook moving"
+                print("rook moving")
                 return self.canRookMove(nextSpace,drow,dcol,destination,piece0)
             elif (abs(movingPiece)==3):
-                print "knight moving"
+                print("knight moving")
                 return self.canKnightMove(nextSpace,drow,dcol,destination,piece0)
             elif (abs(movingPiece)==4):
-                print "bishop moving"
+                print("bishop moving")
                 return self.canBishopMove(nextSpace,drow,dcol,destination,piece0)
             elif (abs(movingPiece)==5):
-                print "queen moving"
+                print("queen moving")
                 return self.canQueenMove(nextSpace,drow,dcol,destination,piece0)
             elif (abs(movingPiece)==6):
-                print "king moving"
+                print("king moving")
                 return self.canKingMove(nextSpace,drow,dcol,destination,piece0)
         return False
 
@@ -690,13 +692,13 @@ class Chess(object):
             (destination==None or destination*board[row0][col0]<0)):
             if (abs(drow)>0):
                 direction=1 if drow>0 else -1
-                for step in xrange(1,abs(drow)):
+                for step in range(1,abs(drow)):
                     if (board[row0+step*direction][col0]!=None):
                         return False
                 return True
             elif (abs(dcol)>0):
                 direction=1 if dcol>0 else -1
-                for step in xrange(1,abs(dcol)):
+                for step in range(1,abs(dcol)):
                     if (board[row0][col0+step*direction]!=None):
                         return False
                 return True
@@ -722,8 +724,8 @@ class Chess(object):
             (destination==None or destination*board[row0][col0]<0)):
             rowDir=1 if drow>0 else -1
             colDir=1 if dcol>0 else -1
-            minXrangeDrow=2 if (abs(drow)==1) else drow
-            for step in xrange(1,abs(minXrangeDrow)):
+            minrangeDrow=2 if (abs(drow)==1) else drow
+            for step in range(1,abs(minrangeDrow)):
                 if (step!=abs(drow) and
                     board[row0+step*rowDir][col0+step*colDir]!=None):
                     return False
@@ -759,7 +761,7 @@ class Chess(object):
     def gameOver(self):
         # prints game over message
         if (self.isGameOver==True):
-            print "Game Over!  Click anywhere in the game screen to exit."
+            print("Game Over!  Click anywhere in the game screen to exit.")
 
 
     def playerTurnSwap(self):
