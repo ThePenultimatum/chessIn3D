@@ -62,7 +62,7 @@ Potential add-on features:
 class Chess(object):
     
     def __init__(self,rows=8,cols=8,gravity=[None,None]):
-        scene = canvas()
+        self.scene = canvas()
         self.gravity=gravity
         #feature to be added: "gravity" allows a space on the board
         # to be specified to pull pieces toward that space a certain amount
@@ -85,13 +85,13 @@ class Chess(object):
         self.keyHeld=False
         # player 1 and player 2 at index 0 and 1 respectively
         # for playerColors and playerFirstMove
-        scene.center=vector(3.5,6,3)
-        scene.title="Chess"
-        scene.width=800
-        scene.height=800
-        scene.bind("click",self.mouseClick)
-        scene.bind("keydown",self.keyDown)
-        scene.bind("keyup",self.keyUp)
+        self.scene.center=vector(3.5,6,3)
+        self.scene.title="Chess"
+        self.scene.width=800
+        self.scene.height=800
+        self.scene.bind("click",self.mouseClick)
+        self.scene.bind("keydown",self.keyDown)
+        self.scene.bind("keyup",self.keyUp)
         self.loadPieces()
         self.loadBoard()
         self.loadLegalMoves()
@@ -359,6 +359,8 @@ class Chess(object):
     def canReachKing(self,board,piece,row,col,):
         # keep track of king pos. and see if piece is diagonal from
         # or in same row/col as king with drow/dcol
+        if (piece == None):
+            return
         (pawn,rook,knight,bishop,queen,king)=(1,2,3,4,5,6)
         if (piece>0):
             otherPlayer=1
@@ -488,7 +490,7 @@ class Chess(object):
         self.keyHeld=False
 
     def mouseClick(self,event):
-        piece=scene.mouse.pick
+        piece=self.scene.mouse.pick
         if (self.isGameOver==False): 
             if ((piece==None) and (self.firstSelected==False)):
                 print("You must select a piece on the board")
@@ -498,7 +500,7 @@ class Chess(object):
                 return False
             self.selection(piece,event)
         else:
-            scene.exit
+            self.scene.exit
 
 
     def selection(self,piece,event):
@@ -542,7 +544,7 @@ class Chess(object):
     def getMove(self,piecePos,event):
         sel1=self.selection1.pos
         sel2=piecePos
-        (drow,dcol)=(sel2[2]-sel1[2],sel2[0]-sel1[0])
+        (drow,dcol)=(sel2.z-sel1.z,sel2.x-sel1.x)
         return (int(drow),int(dcol))
 
 
@@ -556,8 +558,8 @@ class Chess(object):
         sign=-1 if player==1 else 1
         (queen,king)=(5,6)
         willQueen=False
-        (row0,col0,row1,col1)=(int(round(piecePos[2])),int(round(piecePos[0])),
-            int(round(piecePos[2]+drow)),int(round(piecePos[0]+dcol)))
+        (row0,col0,row1,col1)=(int(round(piecePos.z)),int(round(piecePos.x)),
+            int(round(piecePos.z+drow)),int(round(piecePos.x+dcol)))
         if (abs(playBoard[row0][col0])==1 and (row1==0 or row1==7)):
             willQueen=True
         if ((objPieces[row1][col1]!=0) and
@@ -626,10 +628,10 @@ class Chess(object):
         player=self.playerTurn
         direction=1 if self.playerTurn==2 else -1
         board = self.boardWithPieces
-        piece0=(int(round(self.selection1.pos[0])),None,\
-                int(round(self.selection1.pos[2])))
+        piece0=(int(round(self.selection1.pos.x)),None,\
+                int(round(self.selection1.pos.z)))
         movingPiece=board[int(round(piece0[2]))][int(round(piece0[0]))]
-        destination=board[int(round(nextSpace[2]))][int(round(nextSpace[0]))]
+        destination=board[int(round(nextSpace.z))][int(round(nextSpace.x))]
         if (movingPiece!=None):
             if (abs(movingPiece)%10==1):
                 print("pawn moving")
@@ -769,7 +771,7 @@ class Chess(object):
         (self.playerTurn,self.otherPlayer)=(self.otherPlayer,self.playerTurn)
         player=self.playerTurn
         direction=1 if (player==2) else -1
-        scene.forward=(0,-0.3,direction)
+        self.scene.forward=vector(0,-0.3,direction)
 
 
 
