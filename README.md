@@ -5,7 +5,7 @@ This is an implementation of a chess game with 3D graphics using Python 3 and VP
 
 ### Usage
 The game can be run using the bash command when inside this repository base directory:
-'''bash
+'''shell
 python3 3dchess.py
 '''
 
